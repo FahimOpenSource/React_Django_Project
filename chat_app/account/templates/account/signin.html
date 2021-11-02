@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sign in</title>
+    <script src="{% static 'javascript/index.js' %}"></script>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+  </head>
+  <body>
+    <div>
+        <form>
+            <label for="username" class="form_label">Username</label>
+            <input id="username" type="text" >
+            <label for="first_name" class="form_label">First name</label>
+            <input id="first_name" type="text">
+            <label for="last_name" class="form_label">Last name</label>
+            <input id="last_name" type="text">
+            <label for="password" class="form_label">Password</label>
+            <input id="password" type="password">
+        </form>
+    </div>
+  </body>
+</html>
