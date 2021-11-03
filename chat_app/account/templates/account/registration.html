@@ -1,0 +1,29 @@
+{% extends "account/base.html" %}
+
+{% block body %}
+
+<form >
+    <div class="flex justify-end flex-grow flex-col items-center" id="signup">
+        <label for="first_name" class="form_label">First name</label>
+        <input id="first_name" class="border-0 " type="text">
+
+        <label for="last_name" class="form_label">Last name</label>
+        <input id="last_name" class="border-0 " type="text">
+    </div>
+    <div class="flex justify-center flex-grow flex-col items-center " id="signin" >
+        <label for="username" class="form_label">Username</label>
+        <input id="username" class="border-0 " type="text" >
+
+        <label for="password"  class="form_label">Password</label>
+        <input id="password" class="border-0 " type="password">
+    </div>
+    <div class="flex justify-center flex-grow flex-row items-start mb-auto">
+        <button>Sign Up</button>
+        <button>Sign In</button>
+    </div>
+
+
+</form>
+
+
+{% endblock %}
