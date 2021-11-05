@@ -1,9 +1,5 @@
 web: gunicorn chat_app.wsgi
 release: python manage.py makemigrations --noinput
-<<<<<<< HEAD
-# release: python manage.py collectstatic --noinput
-=======
->>>>>>> 1b848a6f3cf86f7d8096b0c0a5c02077bcdd201c
 release: python manage.py migrate --noinput
 
 
