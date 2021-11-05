@@ -2,28 +2,29 @@
 
 {% block body %}
 
-<form >
-    <div class="flex justify-end flex-grow flex-col items-center" id="signup">
-        <label for="first_name" class="form_label">First name</label>
-        <input id="first_name" class="border-0 " type="text">
-
-        <label for="last_name" class="form_label">Last name</label>
-        <input id="last_name" class="border-0 " type="text">
-    </div>
-    <div class="flex justify-center flex-grow flex-col items-center " id="signin" >
-        <label for="username" class="form_label">Username</label>
-        <input id="username" class="border-0 " type="text" >
-
-        <label for="password"  class="form_label">Password</label>
-        <input id="password" class="border-0 " type="password">
-    </div>
-    <div class="flex justify-center flex-grow flex-row items-start mb-auto">
-        <button>Sign Up</button>
-        <button>Sign In</button>
-    </div>
-
-
-</form>
+<div class="wrapper">
+    <h1 class="uppercase mb-8 text-3xl font-bold">Sign Up</h1>
+    <form >
+    
+        <div class="flex justify-end flex-col items-center" id="signup">
+            <input id="first_name" autofocus placeholder="First name" class="w-1/2 p-2 font-medium bg-gray-100 rounded-sm placeholder-gray-500 placeholder-opacity-50 " type="text">
+            <input id="last_name" placeholder="Last name" class="w-1/2 p-2 mt-4 mb-4 placeholder-opacity-25 bg-gray-100 font-medium rounded-sm placeholder-gray-500 placeholder-opacity-50" type="text">
+        </div>
+        <div class="flex justify-center flex-col items-center " id="signin" >
+            
+            <input id="username" placeholder="username" class="w-1/2 p-2 font-medium bg-gray-100 rounded-sm placeholder-gray-500 placeholder-opacity-50" type="text" >
+    
+            <input class="w-1/2 p-2 mt-4 bg-gray-100 font-medium rounded-sm placeholder-gray-500 placeholder-opacity-50" placeholder="password" id="password" type="password">
+        </div>
+        <div class="flex justify-center flex-col items-center">
+            <button class="mt-8 w-1/5 h-14 text-white font-medium rounded-full bg-blue-600 capitalize" placeholder="sign in" id="submit_btn" type="submit"></button>
+        </div>
+    
+    
+    </form>
+    <button id="btn" class="mt-8 text-purple-600 font-sans capitalize underline"></button>
+    
+</div>
 
 
 {% endblock %}

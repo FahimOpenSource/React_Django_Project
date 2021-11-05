@@ -44,12 +44,20 @@ class SignInView(APIView):
             password = serializer.validated_data.get('password',None)
 
             if username and password:
-                user = authenticate(request, username=username, password=password)
-                if user is not None:
-                    login(request,user)
-                    return redirect('chats')
-                else:
-                    pass
+               
+                try:
+                    Account = User.objects.get(username=username)
+                
+                    if Account.check_password(password):
+                        login(request,Account)
+                        return redirect('chats')
+                    return Response({'Message':'Invalid password'},status=status.HTTP_404_NOT_FOUND)
+                except User.DoesNotExist:
+                    return Response({'Message':'Invalid Login Credentials'},status=status.HTTP_404_NOT_FOUND)
+            return Response({'Error':'if user and pp'},status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response({'Error':'invalid data'},status=status.HTTP_406_NOT_ACCEPTABLE)
+
 
 def sign_in(request):
     return render(request, 'account/registration.html', )
@@ -60,5 +68,5 @@ def sign_out(request):
     return redirect('sign_in')
 
 def sign_up(request):
-        return render(request, 'account/signup.html', )
+        return render(request, 'account/registration.html', )
 

@@ -8,6 +8,7 @@ urlpatterns = [
 
     # API URLS
     path('api/all', AccountsView.as_view()),
-    path('api/signup', SignUpView.as_view())
+    path('api/signup', SignUpView.as_view()),
+    path('api/signin', SignInView.as_view())
 ]
  
