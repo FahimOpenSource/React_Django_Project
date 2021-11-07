@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UsernameField
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import User
 
@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'password', 'first_name', 'last_name']
-        # extra_kwargs = {'password':{'write_only': True}}
+        extra_kwargs = {'password':{'write_only': True}}
     def create(self, validated_data):
         """create and return a new user"""
         user = User(
@@ -24,3 +24,13 @@ class UserSerializer(serializers.ModelSerializer):
 class SignInUserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=190)
     password = serializers.CharField(max_length=128, write_only=True)
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['username'] = user.username
+
+        return token

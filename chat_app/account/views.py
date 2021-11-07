@@ -1,14 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from .models import User
 from .serializers import *
-from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.db import router, transaction
 from rest_framework import generics,status 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 class AccountsView(generics.ListAPIView):
     queryset = User.objects.all()
@@ -59,6 +60,11 @@ class SignInView(APIView):
             return Response({'Error':'invalid data'},status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+
 def sign_in(request):
     return render(request, 'account/registration.html', )
 
@@ -69,4 +75,3 @@ def sign_out(request):
 
 def sign_up(request):
         return render(request, 'account/registration.html', )
-
