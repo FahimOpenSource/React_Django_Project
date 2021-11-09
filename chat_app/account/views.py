@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import response
 from .models import User
 from .serializers import *
 from django.shortcuts import render, redirect
@@ -9,9 +10,18 @@ from rest_framework import generics,status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
 
 
-class AccountsView(generics.ListAPIView):
+class UserView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -23,14 +33,16 @@ class SignUpView(APIView):
 
         if serializer.is_valid():
             username = serializer.validated_data.get('username',None)
+            password = serializer.validated_data.get('password',None)
             if username:
                 queryset = User.objects.filter(username=username)
+
                 if queryset.exists():
-                    return Response({'Error':'User Already Exists'},status=status.HTTP_404_NOT_FOUND)
+                    return Response({'Message':'Username Already Exists'},status=status.HTTP_406_NOT_ACCEPTABLE)
                 else:
-                    print('huray')
                     serializer.save()
-                    return Response({'Successful':'Successfully Signed Up'},status=status.HTTP_201_CREATED)
+                    response = redirect('chats')
+                    return response
         else:
             return Response({'Error':'User Already Exists'},status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -43,35 +55,43 @@ class SignInView(APIView):
         if serializer.is_valid():
             username = serializer.validated_data.get('username',None)
             password = serializer.validated_data.get('password',None)
-
             if username and password:
                
                 try:
-                    Account = User.objects.get(username=username)
+                    user = User.objects.get(username=username)
                 
-                    if Account.check_password(password):
-                        login(request,Account)
+                    if user.check_password(password):
                         return redirect('chats')
+
                     return Response({'Message':'Invalid password'},status=status.HTTP_404_NOT_FOUND)
                 except User.DoesNotExist:
-                    return Response({'Message':'Invalid Login Credentials'},status=status.HTTP_404_NOT_FOUND)
-            return Response({'Error':'if user and pp'},status=status.HTTP_202_ACCEPTED)
+                    return Response({'Message':'User does not exist'},status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'Error':'invalid data'},status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+# def sign_in(username, password):
 
 
-
-def sign_in(request):
-    return render(request, 'account/registration.html', )
 
 @login_required
 def sign_out(request): 
     logout(request)
     return redirect('sign_in')
 
-def sign_up(request):
-        return render(request, 'account/registration.html', )
+# def sign_up(request):
+       
+
+def register(request):
+    return render(request, 'account/registration.html', )
+
+
+
+# def set_access_cookie(response,user):
+#     tokens = get_tokens_for_user(user)
+#     access_token = tokens['access']
+#     refresh_token = tokens['refresh']   
+#     response.set_cookie("access_token",value=access_token,max_age=None)
+#     response.set_cookie("refresh_token",value=refresh_token,max_age=None)
+#     return response
+  
