@@ -21,4 +21,3 @@ class AccountSerializer(serializers.ModelSerializer):
  
         return user
 
-
