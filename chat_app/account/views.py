@@ -1,97 +1,58 @@
-from django.contrib.auth.decorators import login_required
-from django.http import response
-from .models import User
+from .models import *
 from .serializers import *
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
-from django.contrib import messages
-from django.db import router, transaction
+from django.http import Http404
 from rest_framework import generics,status 
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response 
 
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
-
-    return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-    }
-
-
-class UserView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class AllAccountsView(generics.ListAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
 
 class SignUpView(APIView):
-    serializer_class = UserSerializer
+    serializer_class = AccountSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             username = serializer.validated_data.get('username',None)
-            password = serializer.validated_data.get('password',None)
             if username:
-                queryset = User.objects.filter(username=username)
+                queryset = Account.objects.filter(username=username)
 
                 if queryset.exists():
-                    return Response({'Message':'Username Already Exists'},status=status.HTTP_406_NOT_ACCEPTABLE)
+                    return Response({'error':'username already exists'},status=status.HTTP_401_UNAUTHORIZED)
                 else:
                     serializer.save()
-                    response = redirect('chats')
-                    return response
+                    return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response({'Error':'User Already Exists'},status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response({'error':'invalid credentials'},status=status.HTTP_401_UNAUTHORIZED)
 
+# methods to be added put,get,delete
+class AccountView(APIView):
+    serializer_class = AccountSerializer
 
-class SignInView(APIView):
-    serializer_class = SignInUserSerializer
+    def get_object(self, pk):
+        try:
+            return Account.objects.get(pk=pk)
+        except Account.DoesNotExist:
+            raise Http404
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+    def get(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        serializer = self.serializer_class(obj)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        obj = self.get_object(pk)
+        serializer = self.serializer_class(obj, data=request.data)
         if serializer.is_valid():
-            username = serializer.validated_data.get('username',None)
-            password = serializer.validated_data.get('password',None)
-            if username and password:
-               
-                try:
-                    user = User.objects.get(username=username)
-                
-                    if user.check_password(password):
-                        return redirect('chats')
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-                    return Response({'Message':'Invalid password'},status=status.HTTP_404_NOT_FOUND)
-                except User.DoesNotExist:
-                    return Response({'Message':'User does not exist'},status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response({'Error':'invalid data'},status=status.HTTP_406_NOT_ACCEPTABLE)
-
-
-# def sign_in(username, password):
-
-
-
-@login_required
-def sign_out(request): 
-    logout(request)
-    return redirect('sign_in')
-
-# def sign_up(request):
-       
-
-def register(request):
-    return render(request, 'account/registration.html', )
-
-
-
-# def set_access_cookie(response,user):
-#     tokens = get_tokens_for_user(user)
-#     access_token = tokens['access']
-#     refresh_token = tokens['refresh']   
-#     response.set_cookie("access_token",value=access_token,max_age=None)
-#     response.set_cookie("refresh_token",value=refresh_token,max_age=None)
-#     return response
-  
+    def delete(self, request, pk, format=None):
+        Account = self.get_object(pk)
+        Account.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    

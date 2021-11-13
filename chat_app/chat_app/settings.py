@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'front_end.apps.FrontEndConfig',
     'api.apps.ApiConfig',
     'account.apps.AccountConfig',
+    'profile_api.apps.ProfileApiConfig',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -85,7 +86,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'account.Account'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -120,9 +121,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-LOGIN_URL = 'accounts/sign-in'
-LOGIN_REDIRECT_URL = 'accounts/sign-in'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -150,7 +148,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
 

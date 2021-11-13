@@ -1,15 +1,15 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import User
+from .models import *
 
-class UserSerializer(serializers.ModelSerializer):
+class AccountSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Account
         fields = ['id', 'username', 'password', 'first_name', 'last_name']
         extra_kwargs = {'password':{'write_only': True}}
     def create(self, validated_data):
         """create and return a new user"""
-        user = User(
+        user = Account(
             username= validated_data['username'],
             first_name= validated_data['first_name'],
             last_name= validated_data['last_name']
@@ -20,9 +20,5 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
  
         return user
-
-class SignInUserSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=190)
-    password = serializers.CharField(max_length=128, write_only=True)
 
 
