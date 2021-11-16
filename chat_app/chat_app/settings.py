@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+import django_heroku
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$q%!@!i+c-70mw^^)kq*0po0rpoqm77s0%6m(-f=vw-v!nkv6p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['herokudjangoapp.herokuapp.com']
 
@@ -179,6 +181,7 @@ SIMPLE_JWT = {
 
 PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
 
+django_heroku.settings(locals())
 
 #  Add configuration for static files storage using whitenoise
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
