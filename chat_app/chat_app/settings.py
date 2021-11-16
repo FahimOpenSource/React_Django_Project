@@ -10,6 +10,8 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import django_heroku
+import dj_database_url
+from decouple import config
 
 
 
@@ -132,6 +134,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -179,13 +183,10 @@ SIMPLE_JWT = {
 }
 
 
-PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
+# PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
 
 django_heroku.settings(locals())
 
 #  Add configuration for static files storage using whitenoise
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-import dj_database_url 
-prod_db  =  dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(prod_db)
