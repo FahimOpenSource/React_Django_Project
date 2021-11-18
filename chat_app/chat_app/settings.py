@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import django_heroku
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$q%!@!i+c-70mw^^)kq*0po0rpoqm77s0%6m(-f=vw-v!nkv6p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+
+if (len(sys.argv) >= 2 and sys.argv[1] == 'runserver'):
+   DEBUG = True
+else:
+   DEBUG = False
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -124,7 +130,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -172,9 +181,5 @@ SIMPLE_JWT = {
 }
 
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-django_heroku.settings(locals())
+django_heroku.settings(locals())  
