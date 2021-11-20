@@ -4,6 +4,7 @@ from django.http import Http404
 from rest_framework import generics,status 
 from rest_framework.views import APIView
 from rest_framework.response import Response 
+from django.shortcuts import render
 
 class AllAccountsView(generics.ListAPIView):
     queryset = Account.objects.all()
@@ -56,3 +57,6 @@ class AccountView(APIView):
         Account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+
+def registration(request):
+    return render(request, 'account/registration.html')
