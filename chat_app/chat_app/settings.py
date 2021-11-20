@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-$q%!@!i+c-70mw^^)kq*0po0rpoqm77s0%6m(-f=vw-v!nkv6p
 DEBUG = False
 # DEBUG_PROPAGATE_EXCEPTIONS = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'chat_app.urls'
