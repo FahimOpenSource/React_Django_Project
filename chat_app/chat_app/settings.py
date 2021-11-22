@@ -10,8 +10,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import django_heroku
-import dj_database_url
-from decouple import config
+import cloudinary
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,7 +30,7 @@ SECRET_KEY = 'django-insecure-$q%!@!i+c-70mw^^)kq*0po0rpoqm77s0%6m(-f=vw-v!nkv6p
 # else:
 #    DEBUG = False
 
-DEBUG = True
+DEBUG = False
 # DEBUG_PROPAGATE_EXCEPTIONS = True
 
 ALLOWED_HOSTS = []
@@ -130,6 +129,14 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Cloudinary config
+cloudinary.config( 
+  cloud_name = 'fahimos', 
+  api_key = '184418964443457', 
+  api_secret = 'wwpGpFZXZ-vIdMhuDxSZCWp9rrE',
+  secure = True
+)
 
 
 # Static files (CSS, JavaScript, Images)

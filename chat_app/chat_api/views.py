@@ -6,6 +6,9 @@ from .models import Inbox,Message
 from account.models import Account
 from profile_api.models import Friend
 from .serializers import ChatsSerializer,InboxSerializer, MessageSerializer
+from rest_framework.parsers import MultiPartParser,FormParser
+
+import cloudinary.uploader
 
 class LoadChatsView(generics.RetrieveAPIView):
     queryset = Account.objects.all()
@@ -43,3 +46,14 @@ class CreateInboxView(APIView):
 class MessageView(generics.CreateAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+# delete method
+
+class UploadView(APIView):
+    parser_classes = [MultiPartParser,FormParser]
+
+    def post(self,request,format=None):
+        file_obj = request.data.get('file')
+        print(file_obj)
+        upload_data = cloudinary.uploader.upload(file_obj)
+        return Response(upload_data)
+# shoud be able to delete asset
