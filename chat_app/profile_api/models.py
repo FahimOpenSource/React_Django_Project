@@ -9,15 +9,18 @@ class FriendRequest(models.Model):
     approved = models.BooleanField(default=False)
     last_modified = models.DateTimeField(auto_now=True)
 
+    # class Meta:
+    #     unique_together = ['sent_to', 'sent_by']
+
     def __str__(self):
         return f'from: {self.sent_by} to: {self.sent_to}'
 
 class Friend(models.Model):
     account = models.ForeignKey(Account,on_delete=models.CASCADE, blank=False, related_name='friends')
-    friend = models.ForeignKey(Account,on_delete=models.CASCADE, blank=False, related_name='friend')
+    approved_account = models.ForeignKey(Account,on_delete=models.CASCADE, blank=False, related_name='account')
     approved_request = models.ForeignKey(FriendRequest,on_delete=models.CASCADE, blank=False, related_name='approved_request')
     chat = models.BooleanField(default=False)
     # add date time field
     def __str__(self):
-        return self.friend
+        return str(self.approved_account)
 

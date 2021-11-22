@@ -8,5 +8,6 @@ class Account(AbstractUser):
     last_name = models.CharField(max_length=10, blank=False)
     active = models.BooleanField(default=True)
     # last_seen = models.DateTimeField()
-
+    def __str__(self):
+        return str(self.username)
 

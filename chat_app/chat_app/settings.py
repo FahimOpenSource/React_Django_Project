@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-$q%!@!i+c-70mw^^)kq*0po0rpoqm77s0%6m(-f=vw-v!nkv6p
 # else:
 #    DEBUG = False
 
-DEBUG = False
+DEBUG = True
 # DEBUG_PROPAGATE_EXCEPTIONS = True
 
 ALLOWED_HOSTS = []
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'front_end.apps.FrontEndConfig',
-    'api.apps.ApiConfig',
+    'chat_api.apps.ChatApiConfig',
     'account.apps.AccountConfig',
     'profile_api.apps.ProfileApiConfig',
     'rest_framework',

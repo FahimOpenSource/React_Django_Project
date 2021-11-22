@@ -1,4 +1,3 @@
-from django.http.response import JsonResponse
 from rest_framework import generics,status 
 from rest_framework.views import APIView
 from rest_framework.response import Response 
@@ -14,12 +13,26 @@ class ProfileView(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
     lookup_url_kwarg = 'pk'
 
-class SendFriendRequestView(generics.ListCreateAPIView):
-    queryset = FriendRequest.objects.all()
+# class SendFriendRequestView(generics.ListCreateAPIView):
+#     queryset = FriendRequest.objects.all()
+#     serializer_class = FriendRequestSerializer
+
+class SendFriendRequestView(APIView):
     serializer_class = FriendRequestSerializer
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            sent_to = serializer.validated_data.get('sent_to',None)
+            sent_by = serializer.validated_data.get('sent_by',None)
+            if sent_to == sent_by:
+                return Response({'error':'invalid input'})
+            request = serializer.save()
+            serializer = self.serializer_class(request)
+            return Response(serializer.data)
 
+        
 
-class UpdateFriendRequestView(APIView):
+class FriendRequestView(APIView):
     serializer_class = FriendRequestSerializer
 
     def get_object(self, pk):
@@ -29,9 +42,14 @@ class UpdateFriendRequestView(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        obj = self.get_object(pk)
-        serializer = self.serializer_class(obj)
+        if pk :
+            obj = self.get_object(pk)
+            serializer = self.serializer_class(obj)
+            return Response(serializer.data)
+        queryset = FriendRequest.objects.all()
+        serializer = self.serializer_class(queryset)
         return Response(serializer.data)
+
 
     def put(self, request, pk, format=None):
         obj = self.get_object(pk)
@@ -43,18 +61,17 @@ class UpdateFriendRequestView(APIView):
                 return Response({'error':'invalid input'}, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 instance = serializer.save()
-            
+
             if instance.approved:
-                friend = Friend.objects.filter(friend=instance.sent_by)
+                friend = Friend.objects.filter(approved_request=instance)
 
                 if friend.exists():
                     return Response({'detail':'request already approved'}, status=status.HTTP_401_UNAUTHORIZED)
                 else:
-                    my_new_friend = Friend(account=instance.sent_to, friend=instance.sent_by, approved_request=instance)
-                    his_new_friend = Friend(account=instance.sent_by, friend=instance.sent_to, approved_request=instance)
+                    my_new_friend = Friend(account=instance.sent_to, approved_account=instance.sent_by, approved_request=instance)
+                    his_new_friend = Friend(account=instance.sent_by, approved_account=instance.sent_to, approved_request=instance)
                     my_new_friend.save()
                     his_new_friend.save()
-
                     return Response(serializer.data, status=status.HTTP_200_OK)
             
             return Response(serializer.data, status=status.HTTP_200_OK)
