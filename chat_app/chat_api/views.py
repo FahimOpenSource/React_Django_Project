@@ -46,7 +46,11 @@ class CreateInboxView(APIView):
 class MessageView(generics.CreateAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-# delete method
+
+class DeleteMessageView(generics.RetrieveDestroyAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    lookup_url_kwarg = 'pk'    
 
 class UploadView(APIView):
     parser_classes = [MultiPartParser,FormParser]
@@ -56,4 +60,9 @@ class UploadView(APIView):
         print(file_obj)
         upload_data = cloudinary.uploader.upload(file_obj)
         return Response(upload_data)
-# shoud be able to delete asset
+     
+class DeleteUploadView(APIView):
+
+    def delete(self,request,public_id,resource_type):
+        response_msg = cloudinary.uploader.destroy(public_id, resource_type= resource_type)
+        return Response(response_msg,status=status.HTTP_204_NO_CONTENT)

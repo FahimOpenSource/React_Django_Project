@@ -13,8 +13,8 @@ class Inbox(models.Model):
 class Message(models.Model):
     # one forwd msg at a time
     forwaded_message = models.ForeignKey('self',on_delete=models.CASCADE,null=True, blank=True, related_name='forwarded')
-    text = models.CharField(max_length=700, blank=False)
+    text = models.CharField(max_length=700, null=True, blank=False)
     sent_to = models.ForeignKey(Inbox,on_delete=models.CASCADE, null=False, blank=False, related_name='received')
     sent_by = models.ForeignKey(Inbox,on_delete=models.CASCADE, null=False, blank=False, related_name='sent')
     date = models.DateTimeField(auto_now_add=True)
-    file_url = models.URLField(blank=True)
+    response = models.JSONField(blank=True,null=True)

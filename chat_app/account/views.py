@@ -57,6 +57,3 @@ class AccountView(APIView):
         Account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-
-def registration(request):
-    return render(request, 'account/registration.html')
