@@ -7,6 +7,7 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ['id', 'username', 'password', 'first_name', 'last_name']
+        # to make sure that the password can't be seen on the front end
         extra_kwargs = {'password':{'write_only': True}}
 
     def create(self, validated_data):
@@ -18,11 +19,8 @@ class AccountSerializer(serializers.ModelSerializer):
             password= validated_data['password']
         )
 
-        try:
-            account.full_clean()
-        except ValidationError as e:
-            non_field_errors = e.message_dict[NON_FIELD_ERRORS]
-            return non_field_errors
+        # makes sure that the password is hashed when an account is created we run a full clean 
+        account.full_clean()
         account.save()
 
         return account
@@ -32,11 +30,9 @@ class AccountSerializer(serializers.ModelSerializer):
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.password = validated_data.get('password', instance.password)
-        try:
-            instance.full_clean()
-        except ValidationError as e:
-            non_field_errors = e.message_dict[NON_FIELD_ERRORS]
-            return non_field_errors
+
+        # makes sure that the password is hashed when an account's `password` is updated we run a full clean 
+        instance.full_clean()
         instance.save()
 
         return instance
