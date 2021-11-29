@@ -1,7 +1,7 @@
 from .models import *
 from rest_framework import serializers
 from account.models import *
-# from profile_api.serializers import FriendSerializer
+from profile_api.serializers import FriendSerializer
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,6 +48,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
         return message
 
+
 class InboxSerializer(serializers.ModelSerializer):
     sent = MessageSerializer(many=True, read_only=True)
     received = MessageSerializer(many=True, read_only=True)
@@ -57,14 +58,14 @@ class InboxSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def update(self, instance, validated_data):
+        instance.chat = validated_data.get('chat',instance.chat)
         instance.blocked = validated_data.get('blocked',instance.blocked)
         instance.save()
         return instance
 
 class ChatsSerializer(serializers.ModelSerializer):
-    # friends = FriendSerializer(many=True, read_only=True)
+    chats = FriendSerializer(many=True, read_only=True, source='friends')
     class Meta:
         model = Account
-        fields = ['id', 'username', 'first_name', 'last_name','active','date_joined','friends']
-        depth = 1
+        fields = ['id', 'username', 'first_name', 'last_name','active','date_joined','chats']
         

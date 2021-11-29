@@ -57,23 +57,25 @@ class FriendRequestSerializer(serializers.ModelSerializer):
                 
         return instance
 
+class FilteredListSerializer(serializers.ListSerializer):
+
+    def to_representation(self, data):
+        data = data.filter(chat=True)
+        return super(FilteredListSerializer, self).to_representation(data)
 
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
-
+        list_serializer_class = FilteredListSerializer
         model = Friend
         fields = '__all__'
-  
-
 
 class ProfileSerializer(serializers.ModelSerializer):
-    friends = FriendSerializer(many=True, read_only=True)
     received = FriendRequestSerializer(many=True, read_only=True)
     sent = FriendRequestSerializer(many=True, read_only=True)
     class Meta:
         model = Account
         fields = ['id', 'username', 'first_name', 'last_name','active','date_joined','received','sent','friends']
-
+        depth = 1
     
 
 
