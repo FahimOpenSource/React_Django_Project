@@ -1,16 +1,7 @@
 from django.db import models
 from profile_api.models import Friend
-# from account.models import Account
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
-# class Inbox(models.Model):
-#     account = models.ForeignKey(Account,on_delete=models.CASCADE, blank=False, related_name='chats')
-#     friend = models.ForeignKey(Friend, on_delete=models.CASCADE, blank=False, related_name='friend')
-#     blocked = models.BooleanField(default=False)
-
-#     def __str__(self):
-#         return str(self.account)
 
 class Message(models.Model):
 
@@ -18,7 +9,7 @@ class Message(models.Model):
     text = models.CharField(max_length=700, null=True, blank=True)
     sent_to = models.ForeignKey(Friend, on_delete=models.CASCADE, null=False, blank=False, related_name='received')
     sent_by = models.ForeignKey(Friend, on_delete=models.CASCADE, null=False, blank=False, related_name='sent')
-    date = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     response = models.JSONField(blank=True, null=True)
 
     def clean(self):
