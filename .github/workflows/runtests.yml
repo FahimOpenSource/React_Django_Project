@@ -8,5 +8,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run Django unit tests
       run: |
-        pip3 install -r requirements.txt
-        python3 manage.py test
+        pip3 install -r chat_app/requirements.txt
+        python3 chat_app/manage.py test
