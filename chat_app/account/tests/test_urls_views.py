@@ -1,4 +1,4 @@
-from rest_framework.test import APITestCase
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from account.models import Account
@@ -11,7 +11,7 @@ def is_json(myjson):
         return False
     return True
 
-class SignUpViewTest(APITestCase):
+class SignUpViewTest(TestCase):
 
     def setUp(self):
         self.url = reverse('signup')
@@ -81,7 +81,7 @@ class SignUpViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(content,[content_1,content_2])
         
-class AccountViewTest(APITestCase):
+class AccountViewTest(TestCase):
 
     def setUp(self):
 

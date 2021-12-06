@@ -40,5 +40,5 @@ class Friend(models.Model):
             })
 
     def __str__(self):
-        return str(self.friend_account)
+        return f'{self.account} friends with {self.friend_account}'
 

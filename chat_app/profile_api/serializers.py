@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
-from account.models import *
+from account.models import Account
 from .models import FriendRequest, Friend
 from django.utils.translation import gettext_lazy as _
 
