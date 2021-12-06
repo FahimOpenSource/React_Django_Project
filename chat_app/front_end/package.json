@@ -1,7 +1,6 @@
 {
   "name": "front_end",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development --watch",
@@ -12,16 +11,22 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
+    "autoprefixer": "^9.8.8",
     "babel-loader": "^8.2.3",
+    "postcss": "^7.0.39",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "webpack": "^5.61.0",
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@craco/craco": "^6.4.2",
+    "mini-css-extract-plugin": "^2.4.5",
     "react-router-dom": "^5.3.0"
-  }
+  },
+  "description": ""
 }
