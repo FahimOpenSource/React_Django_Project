@@ -1,5 +1,5 @@
 const path = require("path");
-const webpack = require("webpack");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -15,18 +15,15 @@ module.exports = {
         use: {
           loader: "babel-loader",
         },
-      },
+      }
+      
     ],
   },
   optimization: {
     minimize: true,
+    minimizer:[
+      new TerserPlugin()
+    ]
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      "process.env": {
-        // This has effect on the react lib size
-        NODE_ENV: JSON.stringify("development"),
-      },
-    }),
-  ],
+
 };

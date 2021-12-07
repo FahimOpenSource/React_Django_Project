@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 
 function App() {
   return (
-    <div className="App">
-      
+    <div className="App bg-red-400">
+      <h1>Fooo fuck yoooo</h1>
     </div>
   );
 }
