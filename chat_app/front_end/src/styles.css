@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+*:focus {
+    outline: none;
+}
+
 body {
     height: 100vh;
     width: 100vw;
+    font-family: 'Mulish', sans-serif;
+    overflow-x: hidden;
 }
