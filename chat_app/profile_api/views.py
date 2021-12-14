@@ -4,17 +4,27 @@ from account.models import Account
 from rest_framework import generics
 from rest_framework.views import APIView
 from .serializers import *
+from account.exceptions import UnsignedUser
 
 class ProfileView(generics.RetrieveAPIView):
-    """ views a user's profile by id specified in url """
+    """ views a user's profile by id """
 
     queryset = Account.objects.all()
     serializer_class = ProfileSerializer
-    lookup_url_kwarg = 'pk'
 
-class SendFriendRequestView(generics.ListCreateAPIView):
-    """Lists and sends a friend request"""
+    def get_object(self):
+        queryset = self.get_queryset()
+        try:
+            self.request.session['id']
+        except KeyError:
+            raise UnsignedUser()
+        for obj in queryset:
+            if obj.id == self.request.session['id']:
+                return obj 
 
+class SendFriendRequestView(generics.CreateAPIView):
+    """send a friend request"""
+    
     queryset = FriendRequest.objects.all()
     serializer_class = FriendRequestSerializer
 
@@ -23,7 +33,7 @@ class FriendRequestView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = FriendRequest.objects.all()
     serializer_class = FriendRequestSerializer
-    lookup_url_kwarg = 'pk'
+
     
 class DeleteFriendView(APIView):
     """Deletes a  friend specified in by `pk`"""

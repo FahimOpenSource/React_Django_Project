@@ -7,7 +7,10 @@ function SignUp() {
   const [last_name, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [submit, setSubmit] = useState(false)
+  const [names, setNames] = useState({list:[]});
+  const [UnhappyStyles, setUnhappyStyles] = useState({ display: "none" });
+  const [HappyStyles, setHappyStyles] = useState({ display: "none" });
+
 
   const string_validator = (input, field_value, call_back) => {
 
@@ -58,8 +61,14 @@ function SignUp() {
 
         <Username
           username={username}
+          names={names}
+          setNames={setNames}
           setUsername={setUsername}
           string_validator={string_validator}
+          UnhappyStyles={UnhappyStyles}
+          setUnhappyStyles={setUnhappyStyles}
+          HappyStyles={HappyStyles}
+          setHappyStyles={setHappyStyles}
         />
 
         <label htmlFor="password" className="mb-2 mt-4">

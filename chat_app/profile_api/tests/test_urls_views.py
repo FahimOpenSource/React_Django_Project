@@ -21,7 +21,15 @@ class ProfileViewTest(TestCase):
             'last_name': 'bar'
         }
         self.account = Account.objects.create(**self.account_info)
-        self.url = reverse('profile', kwargs={'pk':self.account.pk})
+        self.url = reverse('profile')
+
+        data = {
+            "username": self.account_info["username"],
+            "password": self.account_info["password"]
+        }
+
+        self.client.post(reverse('signin'), data, content_type='application/json')
+        
     def test_get_profile(self):
 
         account = self.account
@@ -35,6 +43,7 @@ class ProfileViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 class SendFriendRequestViewTest(TestCase):
+
     def setUp(self):
         self.account_1 = Account.objects.create(
             username='Foo',
@@ -64,10 +73,6 @@ class SendFriendRequestViewTest(TestCase):
         content = json.loads(response.content)
         self.assertEqual(set(content.keys()), {'id','sent_by','sent_to','approved','declined','last_modified'})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        response = self.client.get(url, content_type='application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(set(content.keys()), {'id','sent_by','sent_to','approved','declined','last_modified'})
 
 class FriendRequestViewTest(TestCase):
 

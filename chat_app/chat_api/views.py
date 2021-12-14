@@ -3,6 +3,7 @@ from rest_framework import generics,status
 from rest_framework.response import Response 
 from .models import Message
 from account.models import Account
+from account.exceptions import UnsignedUser
 from profile_api.models import Friend
 from .serializers import ChatsSerializer,InboxSerializer, MessageSerializer
 from rest_framework.parsers import MultiPartParser,FormParser
@@ -10,12 +11,22 @@ import cloudinary.uploader
 
 class LoadChatsView(generics.RetrieveAPIView):
     """Loads all inboxes for an account"""
+
     queryset = Account.objects.all()
     serializer_class = ChatsSerializer
-    lookup_url_kwarg = 'pk'
+        
+    def get_object(self):
+        queryset = self.get_queryset()
+        try:
+            self.request.session['id']
+        except KeyError:
+            raise UnsignedUser()
+        for obj in queryset:
+            if obj.id == self.request.session['id']:
+                return obj 
 
 class CreateInboxView(generics.RetrieveUpdateAPIView):
-    """Creates inboxes from updating the chat field for friend to be `True`"""
+    """Creates inboxes from updating the chat field"""
     queryset = Friend.objects.all()
     serializer_class = InboxSerializer
     lookup_url_kwarg = 'pk'

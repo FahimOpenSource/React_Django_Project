@@ -36,6 +36,10 @@ class SignUpViewTest(TestCase):
 
         data = json.dumps(account)
         response = self.client.post(url, data, content_type='application/json')
+        session = self.client.session
+
+        self.assertTrue(session['id'])
+        self.assertEqual(session['id'],Account.objects.get().id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Account.objects.count(), 1)
         self.assertEqual(Account.objects.get().username, account['username'])
@@ -70,16 +74,18 @@ class SignUpViewTest(TestCase):
         data_1 = json.dumps(self.account_1)
         response_1 = self.client.post(url, data_1, content_type='application/json')
         content_1 = json.loads(response_1.content)
+
         data_2 = json.dumps(self.account_2)
         response_2 = self.client.post(url, data_2, content_type='application/json')
         content_2 = json.loads(response_2.content)
+
         self.assertEqual(response_1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response_2.status_code, status.HTTP_201_CREATED)
 
         response = self.client.get(url)
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(content,[content_1,content_2])
+        self.assertEqual(content,["Foo","Bar"])
         
 class AccountViewTest(TestCase):
 
@@ -94,24 +100,23 @@ class AccountViewTest(TestCase):
 
         self.account = Account.objects.create(**self.account_info)
 
-        self.url = reverse('account', kwargs={'pk': self.account.pk})
+        self.url = reverse('account')
+
+        data = {
+            "username": self.account_info["username"],
+            "password": self.account_info["password"]
+        }
+
+        self.client.post(reverse('signin'), data, content_type='application/json')
 
     def test_get(self):
 
         url = self.url
         response = self.client.get(url)
         content = json.loads(response.content)
+
         self.assertEqual(content['id'], self.account.pk)
         self.assertEqual(set(content.keys()),set(['username','first_name','last_name','id','last_seen_time','last_seen_date']))
-
-    def test_errors(self):
-
-        url = reverse('account', kwargs={'pk': 2})
-        response = self.client.get(url)
-        content = json.loads(response.content)
-        self.assertEqual(content['detail'], 'Not found.')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
 
     def test_put(self):
 
@@ -124,6 +129,7 @@ class AccountViewTest(TestCase):
         
         response = self.client.put(url, data, content_type='application/json')
         content = json.loads(response.content)
+
         self.assertEqual(content['id'], self.account.pk)
         self.assertEqual(content['username'],self.account_info['username'])
         self.assertEqual(content['first_name'],self.account_info['first_name'])
@@ -131,7 +137,35 @@ class AccountViewTest(TestCase):
     
     def test_delete(self):
         url = self.url
-
         response = self.client.delete(url)
+
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(Account.objects.filter(pk=self.account.pk)),0)
+
+class SignInViewTest(TestCase):
+
+    def setUp(self):
+
+        self.account_info = {
+            'username':'Foo',
+            'password': 'admin',
+            'first_name': 'foo',
+            'last_name': 'bar'
+        }
+
+        self.account = Account.objects.create(**self.account_info)
+  
+        self.url = reverse('signin')
+
+    def test_sign_in(self):
+
+        data = {
+            "username": self.account_info["username"],
+            "password": self.account_info["password"]
+        }
+
+        self.client.post( self.url, data, content_type='application/json')
+        session = self.client.session
+
+        self.assertTrue(session)
+        self.assertEqual(session['id'], self.account.id)
