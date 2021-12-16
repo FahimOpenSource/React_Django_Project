@@ -1,21 +1,18 @@
+const useValidateUsername = (username, names) => {
+  const invalid = /(?![@\.+\-_A-Za-z 0-9])./g.test(username);
+  let taken = false;
+  if (username !== "") {
+    for (var name of names.list) {
+      if (name.includes(username)) {
+        taken = true;
+      }
+    }
+  }
 
-
-const useValidateUsername = (username) => {
-
-    const usernames = []
-
-    
+  return {
+    taken,
+    invalid,
+  };
 };
 
-export default useValidateUsername
-
-
-
-// const accounts = res.data;
-
-// for (var account of accounts) {
-//   account_username = account.username;
-//   setUsernames(account_username);
-// }
-// setUsernames("foo");
-// console.log(usernames);
+export default useValidateUsername;

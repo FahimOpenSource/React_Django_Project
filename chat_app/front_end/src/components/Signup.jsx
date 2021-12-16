@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Username from "./Username.jsx";
 
 function SignUp() {
@@ -7,13 +7,10 @@ function SignUp() {
   const [last_name, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [names, setNames] = useState({list:[]});
-  const [UnhappyStyles, setUnhappyStyles] = useState({ display: "none" });
-  const [HappyStyles, setHappyStyles] = useState({ display: "none" });
-
+  const [names, setNames] = useState({ list: [] });
+  const [valid, setValid] = useState(false)
 
   const string_validator = (input, field_value, call_back) => {
-
     const last_input_char = input.charAt(input.length - 1);
 
     if (last_input_char === " ") {
@@ -26,7 +23,7 @@ function SignUp() {
     } else {
       call_back(input);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center lg:w-1/2 mx-auto ">
@@ -65,10 +62,6 @@ function SignUp() {
           setNames={setNames}
           setUsername={setUsername}
           string_validator={string_validator}
-          UnhappyStyles={UnhappyStyles}
-          setUnhappyStyles={setUnhappyStyles}
-          HappyStyles={HappyStyles}
-          setHappyStyles={setHappyStyles}
         />
 
         <label htmlFor="password" className="mb-2 mt-4">
